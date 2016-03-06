@@ -8,7 +8,7 @@
 
 #define OPT 1
 
-typedef struct __OTHERS_ENTRY{
+typedef struct __OTHERS_ENTRY {
     char firstName[16];
     char email[16];
     char phone[10];
@@ -22,11 +22,13 @@ typedef struct __OTHERS_ENTRY{
 
 typedef struct __PHONE_BOOK_ENTRY {
     char lastName[MAX_LAST_NAME_SIZE];
-    othersEntry *detail;  // pointer to others 
+    othersEntry *detail;  // pointer to others
     struct __PHONE_BOOK_ENTRY *pNext;
 } entry;
 
 entry *findName(char lastname[], entry *pHead);
 entry *append(char lastName[], entry *e);
+unsigned long hashfunc(unsigned char *str);
+
 
 #endif

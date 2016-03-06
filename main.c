@@ -43,6 +43,10 @@ int main(int argc, char *argv[])
     e = pHead;
     e->pNext = NULL;
 
+    int SIZE = 40099; //table size 找一個大質數
+    entry *hash_table_head[SIZE]; // 指向各個linked list的頭
+    entry *hash_table[SIZE];  	  // 指向各個linked list最後一個entry
+
 #if defined(__GNUC__)
     __builtin___clear_cache((char *) pHead, (char *) pHead + sizeof(entry));
 #endif
@@ -52,7 +56,22 @@ int main(int argc, char *argv[])
             i++;
         line[i - 1] = '\0';
         i = 0;
+#if defined(OPT)
+        unsigned long hash = hashfunc(line);
+        unsigned long key=hash%SIZE;
+
+        if(hash_table[key]==NULL) {
+            if(key == 29003) {
+                printf("%d\n",key);
+            }
+            hash_table_head[key]= (entry *)malloc(sizeof(entry));
+            hash_table[key] = hash_table_head[key];
+            hash_table[key]->pNext = NULL;
+        }
+        hash_table[key] = append(line,hash_table[key]);
+#else
         e = append(line, e);
+#endif
     }
     clock_gettime(CLOCK_REALTIME, &end);
     cpu_time1 = diff_in_second(start, end);
@@ -62,9 +81,19 @@ int main(int argc, char *argv[])
 
     e = pHead;
 
+
     /* the givn last name to find */
     char input[MAX_LAST_NAME_SIZE] = "zyxel";
+
+#if defined(OPT)
+    unsigned long hash = hashfunc(input);
+    unsigned long key=hash%SIZE;
+    e = hash_table_head[key];
+    printf("%d\n",key);
+#else
     e = pHead;
+#endif
+
 
     assert(findName(input, e) &&
            "Did you implement findName() in " IMPL "?");
